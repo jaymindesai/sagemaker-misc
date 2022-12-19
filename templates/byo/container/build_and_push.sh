@@ -44,10 +44,11 @@ aws ecr get-login-password --region "${region}" | docker login --username AWS --
 byo_root_dir=$0:P:h:h
 cp -r "${byo_root_dir}/models/${model_files_dir}" "./${model_files_dir}"
 
-# Build the docker image locally with the image name and then push it to ECR with the full name
+# Build the docker image locally with the image name
 docker build -t "${image}" --build-arg model_files_dir="${model_files_dir}" .
-docker tag "${image}" "${full_image_name}"
 
+# Push the image to ECR with the full name
+docker tag "${image}" "${full_image_name}"
 docker push "${full_image_name}"
 
 # Remove temp files

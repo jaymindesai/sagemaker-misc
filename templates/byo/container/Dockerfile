@@ -21,8 +21,8 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 WORKDIR /opt/program
 
 # Setup serving wrapper
-COPY "config" ./config
-COPY "serving" .
+COPY "nginx.conf" .
+COPY "serve.py" .
 RUN pip install --no-cache-dir gunicorn
 
 # Setup inference app

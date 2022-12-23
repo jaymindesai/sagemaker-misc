@@ -26,13 +26,8 @@ _num_threads_per_worker = int(os.environ.get('MODEL_SERVER_THREADS_PER_WORKERS',
 _worker_class = "gthread"
 _log_level = os.environ.get('LOG_LEVEL', 'INFO')
 
-# Config files
-_log_config = "/opt/program/config/logging.conf"
-_nginx_config = "/opt/program/config/nginx.conf"
-
 
 def start_server():
-    _setup_logging()
     logging.info("Starting inference server")
     logging.info(
         "Gunicorn config: workers={}, worker_class={}, threads_per_worker={}, timeout={}".format(
@@ -42,14 +37,13 @@ def start_server():
     subprocess.check_call(['ln', '-sf', '/dev/stdout', '/var/log/nginx/access.log'])
     subprocess.check_call(['ln', '-sf', '/dev/stderr', '/var/log/nginx/error.log'])
 
-    nginx = subprocess.Popen(['nginx', '-c', _nginx_config])
+    nginx = subprocess.Popen(['nginx', '-c', "/opt/program/nginx.conf"])
     gunicorn = subprocess.Popen(['gunicorn',
                                  '--bind', 'unix:/tmp/gunicorn.sock',
                                  '--timeout', str(_model_server_timeout),
                                  '--worker-class', _worker_class,
                                  '--workers', str(_model_server_workers),
                                  '--threads', str(_num_threads_per_worker),
-                                 '--log-config', _log_config,
                                  '--log-level', _log_level,
                                  '--preload',
                                  'inference:app'])
@@ -65,14 +59,6 @@ def start_server():
 
     _sigterm_handler(nginx.pid, gunicorn.pid)
     logging.info("Exiting inference server")
-
-
-def _setup_logging():
-    with open(_log_config, 'r') as file:
-        content = file.read().replace('${LOG_LEVEL}', _log_level)
-    with open(_log_config, 'w') as file:
-        file.write(content)
-    logging.config.fileConfig(_log_config)
 
 
 def _sigterm_handler(nginx_pid, gunicorn_pid):

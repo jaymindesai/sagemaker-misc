@@ -48,8 +48,8 @@ cp -r "${byo_root_dir}/models/${model_files_dir}" "./${model_files_dir}"
 docker build -t "${image}" --build-arg model_files_dir="${model_files_dir}" .
 
 # Push the image to ECR with the full name
-#docker tag "${image}" "${full_image_name}"
-#docker push "${full_image_name}"
+docker tag "${image}" "${full_image_name}"
+docker push "${full_image_name}"
 
 # Remove temp files
 rm -rf "./${model_files_dir}"

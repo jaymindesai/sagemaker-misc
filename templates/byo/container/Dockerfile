@@ -26,7 +26,7 @@ COPY "serving" .
 RUN pip install --no-cache-dir gunicorn
 
 # Setup permissions for Serverless endpoint - https://docs.aws.amazon.com/sagemaker/latest/dg/serverless-endpoints-troubleshooting.html
-RUN chmod o+rwX /opt/program/config/logging.conf
+RUN chmod o+rwX -R /opt/program
 
 # Setup inference app
 COPY "$model_files_dir" .

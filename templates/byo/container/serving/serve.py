@@ -1,9 +1,9 @@
-# This file starts the inference server. It starts nginx and gunicorn with the correct configurations and then simply
-# waits until gunicorn exits.
+# This file starts the inference server. It starts Nginx and Gunicorn with the specified configurations and then simply
+# waits until Gunicorn exits.
 #
-# The flask server is specified to be the app object in wsgi.py
+# The Flask server is specified to be the app object in wsgi.py
 #
-# We set the following parameters:
+# We set the following parameters on Gunicorn startup command:
 #
 # Parameter                Environment Variable              Default Value
 # ---------                --------------------              -------------

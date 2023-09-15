@@ -3,8 +3,8 @@ FROM python:3.9-slim-buster
 ARG model_files_dir
 
 # Install OS pacakges
-RUN apt-get -y update && apt-get install -y --no-install-recommends \
-         nginx \
+RUN apt-get -y update  \
+    && apt-get install -y --no-install-recommends nginx  \
     && rm -rf /var/lib/apt/lists/*
 
 # Set Python environment variables - https://docs.python.org/3/using/cmdline.html#environment-variables
@@ -19,6 +19,7 @@ RUN python -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 WORKDIR /opt/program
+ENV PATH="/opt/program:${PATH}"
 
 # Setup serving wrapper
 COPY "config" ./config
@@ -32,5 +33,5 @@ RUN chmod o+rwX -R /opt/program
 COPY "$model_files_dir" .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Add an executable entrypoint
+# Add an entrypoint
 ENTRYPOINT ["python", "serve.py"]
